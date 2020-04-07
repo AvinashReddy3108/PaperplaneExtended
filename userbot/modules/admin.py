@@ -438,12 +438,14 @@ async def muter(moot):
                         ChatAdminRequiredError, UserIdInvalidError):
                     await moot.client.send_read_acknowledge(
                         moot.chat_id, moot.id)
-    for i in gmuted:
-        if i.sender == str(moot.sender_id):
-            try:
-                await moot.delete()
-            except BadRequestError:
-                await moot.client.send_read_acknowledge(moot.chat_id, moot.id)
+    if gmuted:
+        for i in gmuted:
+            if i.sender == str(moot.sender_id):
+                try:
+                    await moot.delete()
+                except BadRequestError:
+                    await moot.client.send_read_acknowledge(
+                        moot.chat_id, moot.id)
 
 
 @register(outgoing=True, pattern="^\.ungmute(?: |$)(.*)", groups_only=True)
